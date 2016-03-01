@@ -62,7 +62,7 @@ void L1TuGT::analyze(const edm::Event& evt, const edm::EventSetup& evtSetup) {
    //FIXME: Remove duplicate definition of L1TnumAlgs 
    const int L1TnumAlgs = 512;
   
-    nrEvJob_++;
+   nrEvJob_++;
    
    if (verbose_) {
       edm::LogInfo("L1TuGT") << "L1TuGT: Analyzing" << std::endl;
@@ -72,11 +72,12 @@ void L1TuGT::analyze(const edm::Event& evt, const edm::EventSetup& evtSetup) {
    const int lsNumber = evt.luminosityBlock();
    
    // Open uGT readout record
-   edm::Handle<BXVector<GlobalAlgBlk>> uGtAlgs;
+   //edm::Handle<BXVector<GlobalAlgBlk>> uGtAlgs;
+   edm::Handle<GlobalAlgBlkBxCollection> uGtAlgs;
    evt.getByToken(l1tuGtSource_, uGtAlgs);
    
    if (!uGtAlgs.isValid()) {
-      edm::LogInfo("L1TuGT") << "Cannot find GlobalAlgBlk readout record";
+      edm::LogInfo("L1TuGT") << "Cannot find uGT readout record";
       return;
    }
    // Get uGT algo bit statistics
