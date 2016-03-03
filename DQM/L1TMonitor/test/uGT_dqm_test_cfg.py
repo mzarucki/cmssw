@@ -6,7 +6,7 @@ import FWCore.ParameterSet.Config as cms
 import sys
 
 # run uGT and GT DQM in parallel
-parallel = True
+parallel = False
 
 #-------------------------------------
 #Event Source
@@ -65,10 +65,10 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 # standard rawToDigi unpacking sequence
 process.load("Configuration.StandardSequences.RawToDigi_Data_cff")
 process.rawToDigiPath = cms.Path(process.RawToDigi)
-process.RawToDigi.remove("siPixelDigis")
-process.RawToDigi.remove("siStripDigis")
-process.RawToDigi.remove("scalersRawToDigi")
-process.RawToDigi.remove("castorDigis")
+#process.RawToDigi.remove("siPixelDigis")
+#process.RawToDigi.remove("siStripDigis")
+#process.RawToDigi.remove("scalersRawToDigi")
+#process.RawToDigi.remove("castorDigis")
 
 # uGT DQM module and unpacker
 process.load("DQM.L1TMonitor.L1TuGT_cfi")
@@ -104,7 +104,7 @@ process.dqmEndPath = cms.EndPath(process.dqmEnv * process.dqmSaver)
 #
 #process.output_step = cms.EndPath(process.output)
 
-process.schedule = cms.Schedule(process.rawToDigiPath,
+process.schedule = cms.Schedule(#process.rawToDigiPath,
                                 process.l1tGtUnpackPath,
                                 process.l1tMonitorPath,
                                 process.dqmEndPath)

@@ -76,9 +76,21 @@ private:
    
    // Booking of histograms for the module
    MonitorElement* algo_bits_;
-   //MonitorElement* algo_bits_corr_;
+   MonitorElement* algo_bits_corr_;
+   MonitorElement* algo_bits_bx_;
    MonitorElement* algo_bits_lumi_;
-   
+  
+   //MonitorElement* event_number_;
+   //MonitorElement* event_lumi_;
+   //MonitorElement* trigger_number_;
+   //MonitorElement* trigger_lumi_;
+   //MonitorElement* evnum_trignum_lumi_;
+   MonitorElement* orbit_lumi_;
+   //MonitorElement* setupversion_lumi_;
+
+   MonitorElement* prescaleFactorSet_;
+   //MonitorElement* m_monL1PfIndicesPerLs;
+ 
 };
 
 #endif
