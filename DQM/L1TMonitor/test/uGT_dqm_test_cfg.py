@@ -6,7 +6,7 @@ import FWCore.ParameterSet.Config as cms
 import sys
 
 # run uGT and GT DQM in parallel
-parallel = False
+parallel = True
 
 #-------------------------------------
 #Event Source
@@ -65,10 +65,10 @@ process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
 # standard rawToDigi unpacking sequence
 process.load("Configuration.StandardSequences.RawToDigi_Data_cff")
 process.rawToDigiPath = cms.Path(process.RawToDigi)
-#process.RawToDigi.remove("siPixelDigis")
-#process.RawToDigi.remove("siStripDigis")
-#process.RawToDigi.remove("scalersRawToDigi")
-#process.RawToDigi.remove("castorDigis")
+process.RawToDigi.remove("siPixelDigis")
+process.RawToDigi.remove("siStripDigis")
+process.RawToDigi.remove("scalersRawToDigi")
+process.RawToDigi.remove("castorDigis")
 
 # uGT DQM module and unpacker
 process.load("DQM.L1TMonitor.L1TuGT_cfi")
@@ -88,27 +88,10 @@ if parallel == True:
 
 process.dqmEndPath = cms.EndPath(process.dqmEnv * process.dqmSaver)
 
-#process.output = cms.OutputModule(
-#    "PoolOutputModule",
-#    splitLevel = cms.untracked.int32(0),
-#    eventAutoFlushCompressedSize = cms.untracked.int32(5242880),
-#    outputCommands = cms.untracked.vstring('keep *',),
-#    # outputCommands = cms.untracked.vstring('drop *',
-#    #                                        'keep *_*_*_L1TEMULATION'),
-#    fileName = cms.untracked.string('stage1_debug.root'),
-#    dataset = cms.untracked.PSet(
-#        filterName = cms.untracked.string(''),
-#        dataTier = cms.untracked.string('')
-#        )
-#    )
-#
-#process.output_step = cms.EndPath(process.output)
-
-process.schedule = cms.Schedule(#process.rawToDigiPath,
+process.schedule = cms.Schedule(process.rawToDigiPath,
                                 process.l1tGtUnpackPath,
                                 process.l1tMonitorPath,
                                 process.dqmEndPath)
-                                #process.output_step
 
 #---------------------------------------------
 
@@ -124,35 +107,6 @@ process.schedule = cms.Schedule(#process.rawToDigiPath,
 #process.dqmSaver.dirName = '.'
 #process.dqmSaver.saveByRun = 1
 #process.dqmSaver.saveAtJobEnd = True
-
-## Message Logger
-#process.load('FWCore.MessageService.MessageLogger_cfi')
-#process.MessageLogger.debugModules = ['l1tGt'] #l1tuGT
-#process.MessageLogger.categories.append('L1TGT') #L1TuGT
-#process.MessageLogger.destinations = ['L1TDQM_errors','L1TDQM_warnings','L1TDQM_info','L1TDQM_debug']
-#
-#process.MessageLogger.L1TDQM_errors = cms.untracked.PSet(
-#        threshold = cms.untracked.string('ERROR'),
-#        ERROR = cms.untracked.PSet( limit = cms.untracked.int32(-1)))
-#
-#process.MessageLogger.L1TDQM_warnings = cms.untracked.PSet(
-#        threshold = cms.untracked.string('WARNING'),
-#        WARNING = cms.untracked.PSet( limit = cms.untracked.int32(0)),
-#        ERROR = cms.untracked.PSet( limit = cms.untracked.int32(0)))
-#
-#process.MessageLogger.L1TDQM_info = cms.untracked.PSet(
-#        threshold = cms.untracked.string('INFO'),
-#        INFO = cms.untracked.PSet( limit = cms.untracked.int32(0) ),
-#        WARNING = cms.untracked.PSet( limit = cms.untracked.int32(0) ),
-#        ERROR = cms.untracked.PSet( limit = cms.untracked.int32(0) ),
-#        L1TGT = cms.untracked.PSet( limit = cms.untracked.int32(-1))) #L1TuGT
-#
-#process.MessageLogger.L1TDQM_debug = cms.untracked.PSet(
-#        threshold = cms.untracked.string('DEBUG'),
-#        DEBUG = cms.untracked.PSet( limit = cms.untracked.int32(0)),
-#        INFO = cms.untracked.PSet( limit = cms.untracked.int32(0)),
-#        WARNING = cms.untracked.PSet( limit = cms.untracked.int32(0)),
-#        ERROR = cms.untracked.PSet( limit = cms.untracked.int32(0)))
 
 #Raw data input
 process.gtDigis.DaqGtInputTag = cms.InputTag("rawDataCollector")

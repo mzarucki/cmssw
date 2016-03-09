@@ -63,8 +63,8 @@ private:
    edm::EDGetTokenT<GlobalAlgBlkBxCollection> l1tuGtSource_; // input tag for L1 uGT DAQ readout record
   
    // Switches to choose the running of various methods
-   bool runInEventLoop_;
-   bool runInEndLumi_;
+   //bool runInEventLoop_;
+   //bool runInEndLumi_;
    
    bool verbose_; // verbosity switch
    

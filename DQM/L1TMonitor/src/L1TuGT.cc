@@ -14,8 +14,8 @@
 //Constructor
 L1TuGT::L1TuGT(const edm::ParameterSet& params):
    l1tuGtSource_(consumes<GlobalAlgBlkBxCollection>(params.getParameter<edm::InputTag>("uGtSource"))),
-   runInEventLoop_(params.getUntrackedParameter<bool>("runInEventLoop", false)),
-   runInEndLumi_(params.getUntrackedParameter<bool>("runInEndLumi", false)),
+   //runInEventLoop_(params.getUntrackedParameter<bool>("runInEventLoop", false)),
+   //runInEndLumi_(params.getUntrackedParameter<bool>("runInEndLumi", false)),
    verbose_(params.getUntrackedParameter<bool> ("verbose", false)),
    nrEvJob_(0), nrEvRun_(0)
 {
@@ -123,11 +123,7 @@ void L1TuGT::analyze(const edm::Event& evt, const edm::EventSetup& evtSetup) {
 
       //algo_bits_->Fill(-1.); // fill underflow to normalize //FIXME: needed? 
       
-      //cout << "first bx: " << uGtAlgs->getFirstBX() << endl; 
-      //cout << "last bx: " << uGtAlgs->getLastBX() << endl; 
-      
       for (int ibx=uGtAlgs->getFirstBX(); ibx <= uGtAlgs->getLastBX(); ++ibx) {
-         //cout << "ibx: " << ibx << endl; 
          for (auto itr = uGtAlgs->begin(ibx); itr != uGtAlgs->end(ibx); ++itr) { //FIXME: redundant loop over 1-dim vector?
             
             orbit_lumi_->Fill(lsNumber, itr->getOrbitNr());
@@ -136,11 +132,10 @@ void L1TuGT::analyze(const edm::Event& evt, const edm::EventSetup& evtSetup) {
             //Fills algorithm bits histograms
             for(int algoBit = 0; algoBit < L1TnumAlgs; algoBit++) {
                if(itr->getAlgoDecisionFinal(algoBit)) {
-                  //cout << "algoBit: " << algoBit << endl;
                   algo_bits_->Fill(algoBit);
                   algo_bits_lumi_->Fill(lsNumber, algoBit);
-                  algo_bits_bx_->Fill(algoBit, itr->getbxNr()); //FIXME: or getbxInEventNr()?
-
+                  algo_bits_bx_->Fill(algoBit, itr->getbxNr()); //FIXME: or ibx or getbxInEventNr()?
+                  
                   for(int algoBit2 = 0; algoBit2 < L1TnumAlgs; algoBit2++) {
                      if(itr->getAlgoDecisionFinal(algoBit2)) {
                         algo_bits_corr_->Fill(algoBit, algoBit2);
