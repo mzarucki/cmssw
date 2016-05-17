@@ -8,7 +8,7 @@ from DQM.L1TMonitor.environment_file_cfi import *
 #RunType, and Runkey selection from RCMS
 import sys
 from FWCore.ParameterSet.VarParsing import VarParsing
-from DQM.Integration.test.dqmPythonTypes import *
+#from DQM.Integration.test.dqmPythonTypes import *
 
 runParameters = VarParsing ('analysis')
 runParameters.register ('runtype',
@@ -27,10 +27,8 @@ runParameters.register ('runkey',
 if len(sys.argv) > 1:
   runParameters.parseArguments()
 
-runType = RunType(['pp_run','cosmic_run','hi_run','hpu_run'])
+#runType = RunType(['pp_run','cosmic_run','hi_run','hpu_run'])
 if not runParameters.runkey.strip():
   runParameters.runkey = 'pp_run'
 
-runType.setRunType(runParameters.runkey.strip())
-
-
+#runType.setRunType(runParameters.runkey.strip())
