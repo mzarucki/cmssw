@@ -11,7 +11,7 @@ process = cms.Process("L1TStage2EmulatorDQM")
 
 # Testing in lxplus
 process.load("DQM.L1TMonitor.fileinputsource_cfi")
-#process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
+process.load("DQM.Integration.config.FrontierCondition_GT_Offline_cfi") 
 
 # Required to load EcalMappingRecord
 process.load("Configuration.StandardSequences.GeometryRecoDB_cff")
@@ -28,14 +28,14 @@ process.load("DQM.L1TMonitor.environment_file_cff") #has to be after environment
 #--------------------------------------------------
 ## Standard Unpacking Path
 #
-#process.load("Configuration.StandardSequences.RawToDigi_Data_cff")    
-#
-#process.rawToDigiPath = cms.Path(process.RawToDigi)
-#
-## Remove Unpacker Modules
-#process.rawToDigiPath.remove(process.siStripDigis)
-#process.rawToDigiPath.remove(process.gtDigis)
-#process.rawToDigiPath.remove(process.gtEvmDigis)
+process.load("Configuration.StandardSequences.RawToDigi_Data_cff")    
+
+process.rawToDigiPath = cms.Path(process.RawToDigi)
+
+# Remove Unpacker Modules
+process.rawToDigiPath.remove(process.siStripDigis)
+process.rawToDigiPath.remove(process.gtDigis)
+process.rawToDigiPath.remove(process.gtEvmDigis)
 
 #--------------------------------------------------
 # Stage2 DQM Paths
@@ -59,38 +59,37 @@ process.load("DQM.L1TMonitor.L1TStage2Emulator2_cff")
 process.l1tEmulatorMonitorPath = cms.Path(
     #process.hltFatEventFilter +
 #    process.selfFatEventFilter +
-    process.l1tStage2Unpack  +
+    process.l1tStage2Unpack +
     process.Stage2L1HardwareValidation +
-    process.l1tStage2EmulatorOnlineDQM 
+    process.l1tStage2EmulatorOnlineDQM
     )
 
-#process.load('L1Trigger.L1TGlobal.StableParameters_cff')
+# To get L1 CaloParams
+# TODO: when L1 O2O is finished, this must be removed!
+process.load('L1Trigger.L1TCalorimeter.caloStage2Params_cfi')
+# To get CaloTPGTranscoder
+process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
+process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
 
-## To get L1 CaloParams
-## TODO: when L1 O2O is finished, this must be removed!
-#process.load('L1Trigger.L1TCalorimeter.caloStage2Params_cfi')
-## To get CaloTPGTranscoder
-#process.load('SimCalorimetry.HcalTrigPrimProducers.hcaltpdigi_cff')
-#process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
-#
+# To get L1 uGT parameters:
+#process.load('L1Trigger.L1TGlobal.hackConditions_cff')
+process.load('L1Trigger.L1TGlobal.StableParameters_cff')
+
 #--------------------------------------------------
 # TODO: Stage2 Emulator Quality Tests
-#process.load("DQM.L1TMonitorClient.L1TStage2EmulatorMonitorClient_cff")
-#process.l1tStage2EmulatorMonitorClientPath = cms.Path(process.l1tStage2EmulatorMonitorClient)
+process.load("DQM.L1TMonitorClient.L1TStage2EmulatorMonitorClient_cff")
+process.l1tStage2EmulatorMonitorClientPath = cms.Path(process.l1tStage2EmulatorMonitorClient)
 
 #Endpath
-process.dqmEndPath = cms.EndPath(
-    process.dqmEnv *
-    process.dqmSaver
-)
+process.dqmEndPath = cms.EndPath(process.dqmEnv * process.dqmSaver)
 
 #--------------------------------------------------
 # L1T Emulator Online DQM Schedule
 
 process.schedule = cms.Schedule( 
-    #process.rawToDigiPath,
+    process.rawToDigiPath,
     process.l1tEmulatorMonitorPath,
-    #process.l1tStage2EmulatorMonitorClientPath,
+    process.l1tStage2EmulatorMonitorClientPath,
     process.dqmEndPath
 )
 

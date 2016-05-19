@@ -18,7 +18,7 @@ from EventFilter.L1TRawToDigi.l1tRawtoDigiBMTF_cfi import *
 
 # EMTF
 from EventFilter.L1TRawToDigi.emtfStage2Digis_cfi import *
-
+#
 # uGMT
 from EventFilter.L1TRawToDigi.gmtStage2Digis_cfi import *
 
@@ -26,44 +26,57 @@ from EventFilter.L1TRawToDigi.gmtStage2Digis_cfi import *
 from EventFilter.L1TRawToDigi.gtStage2Digis_cfi import *
 
 l1tStage2Unpack = cms.Sequence(
-    #l1tCaloLayer1Digis +
-    #caloStage2Digis +
-    #BMTFStage2Digis +
+    l1tCaloLayer1Digis +
+    caloStage2Digis +
+    BMTFStage2Digis +
 #    omtfStage2Digis +
-    #emtfStage2Digis +
-    #gmtStage2Digis +
+    emtfStage2Digis +
+    gmtStage2Digis +
     gtStage2Digis
 )
 
 #-------------------------------------------------
 # Stage2 Emulator Modules (TODO: Move to L1Trigger.HardwareValidation.L1Stage2HardwareValidation_cff)
 
-## CaloLayer1
-#from L1Trigger.L1TCaloLayer1.simCaloStage2Layer1Digis_cfi import simCaloStage2Layer1Digis
-#valCaloStage2Layer1Digis = simCaloStage2Layer1Digis.clone()
-#valCaloStage2Layer1Digis.ecalToken = cms.InputTag("l1tCaloLayer1Digis")
-#valCaloStage2Layer1Digis.hcalToken = cms.InputTag("l1tCaloLayer1Digis")
-#valCaloStage2Layer1Digis.unpackEcalMask = cms.bool(True)
-#valCaloStage2Layer1Digis.unpackHcalMask = cms.bool(True)
-#
-## CaloLayer2
-#from L1Trigger.L1TCalorimeter.simCaloStage2Digis_cfi import simCaloStage2Digis
-#valCaloStage2Layer2Digis = simCaloStage2Digis.clone()
-#valCaloStage2Layer2Digis.towerToken = cms.InputTag("caloStage2Digis", "CaloTower")
-#
-## EMTF
-#from L1Trigger.L1TMuonEndCap.simEmtfDigis_cfi import *
-#valEmtfStage2Digis = simEmtfDigis.clone()
-#valEmtfStage2Digis.CSCInput = "csctfDigis"
+# CaloLayer1
+from L1Trigger.L1TCaloLayer1.simCaloStage2Layer1Digis_cfi import simCaloStage2Layer1Digis
+valCaloStage2Layer1Digis = simCaloStage2Layer1Digis.clone()
+valCaloStage2Layer1Digis.ecalToken = cms.InputTag("l1tCaloLayer1Digis")
+valCaloStage2Layer1Digis.hcalToken = cms.InputTag("l1tCaloLayer1Digis")
+valCaloStage2Layer1Digis.unpackEcalMask = cms.bool(True)
+valCaloStage2Layer1Digis.unpackHcalMask = cms.bool(True)
+
+# CaloLayer2
+from L1Trigger.L1TCalorimeter.simCaloStage2Digis_cfi import simCaloStage2Digis
+valCaloStage2Layer2Digis = simCaloStage2Digis.clone()
+valCaloStage2Layer2Digis.towerToken = cms.InputTag("caloStage2Digis", "CaloTower")
+
+# EMTF
+from L1Trigger.L1TMuonEndCap.simEmtfDigis_cfi import *
+valEmtfStage2Digis = simEmtfDigis.clone()
+valEmtfStage2Digis.CSCInput = "csctfDigis"
 
 # uGT
+#from L1Trigger.L1TGlobal.hackConditions_cff import *
+#from L1Trigger.L1TGlobal.StableParameters_cff import *
 from L1Trigger.L1TGlobal.simGtStage2Digis_cfi import simGtStage2Digis
-#from L1Trigger.L1TGlobal.StableParameters_cff import * #here?
+from L1Trigger.L1TGlobal.simGtExtFakeProd_cfi import simGtExtFakeProd
+from L1Trigger.L1TMuon.simGmtStage2Digis_cfi import simGmtStage2Digis
+from L1Trigger.L1TCalorimeter.simCaloStage2Digis_cfi import simCaloStage2Digis
 
-#valGtStage2Digis = simGtStage2Digis.clone()
+#simGtExtFakeStage2Digis = simGtExtFakeProd.clone()
+valGtStage2Digis = simGtStage2Digis.clone()
+valGtStage2Digis.MuonInputTag = cms.InputTag("gmtStage2Digis") #simGmtStage2Digis") #gmtStage2Digis
+valGtStage2Digis.ExtInputTag = cms.InputTag("simGtExtFakeProd") #Stage2Digis") #simGtExtFakeProd
+valGtStage2Digis.EGammaInputTag = cms.InputTag("caloStage2Digis") #simCaloStage2Digis") #caloStage2Digis
+valGtStage2Digis.TauInputTag = cms.InputTag("caloStage2Digis")#simCaloStage2Digis") #caloStage2Digis
+valGtStage2Digis.JetInputTag = cms.InputTag("caloStage2Digis")#simCaloStage2Digis") #caloStage2Digis
+valGtStage2Digis.EtSumInputTag = cms.InputTag("caloStage2Digis")#simCaloStage2Digis") #caloStage2Digis
+valGtStage2Digis.AlgorithmTriggersUnmasked = cms.bool(False)
+valGtStage2Digis.AlgorithmTriggersUnprescaled = cms.bool(False)
 
-Stage2L1HardwareValidation = cms.Sequence(simGtStage2Digis)
-#Stage2L1HardwareValidation = cms.Sequence(valGtStage2Digis)
+#Stage2L1HardwareValidation = cms.Sequence(simGtStage2Digis)
+Stage2L1HardwareValidation = cms.Sequence(valGtStage2Digis)
 
 #Stage2L1HardwareValidation = cms.Sequence( #original
 #    valCaloStage2Layer1Digis +
@@ -71,15 +84,6 @@ Stage2L1HardwareValidation = cms.Sequence(simGtStage2Digis)
 #    valEmtfStage2Digis
 #)
 
-#emuGtStage2Digis = process.simGtStage2Digis.clone()
-#emuGtStage2Digis.MuonInputTag = cms.InputTag("gmtStage2Digis"), #simGmtStage2Digis"),
-#emuGtStage2Digis.ExtInputTag = cms.InputTag("none"),
-#emuGtStage2Digis.EGammaInputTag = cms.InputTag("caloStage2Digis"), #"simCaloStage2Digis"),
-#emuGtStage2Digis.TauInputTag = cms.InputTag("caloStage2Digis"), #simCaloStage2Digis"),
-#emuGtStage2Digis.JetInputTag = cms.InputTag("caloStage2Digis"), #simCaloStage2Digis"),
-#emuGtStage2Digis.EtSumInputTag = cms.InputTag("caloStage2Digis"), #simCaloStage2Digis"),
-#emuGtStage2Digis.AlgorithmTriggersUnmasked = cms.bool(False),    
-#emuGtStage2Digis.AlgorithmTriggersUnprescaled = cms.bool(False),
 
 
 #-------------------------------------------------
