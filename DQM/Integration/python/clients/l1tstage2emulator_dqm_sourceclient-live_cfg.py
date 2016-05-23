@@ -79,7 +79,7 @@ process.HcalTPGCoderULUT.LUTGenerationMode = cms.bool(False)
 # To get L1 uGT parameters:
 # TODO: when L1 O2O is finished, this must be removed!
 #process.load('L1Trigger.L1TGlobal.hackConditions_cff')
-process.load('L1Triggdder.L1TGlobal.StableParameters_cff')
+process.load('L1Trigger.L1TGlobal.StableParameters_cff')
 
 #--------------------------------------------------
 # TODO: Stage2 Emulator Quality Tests
